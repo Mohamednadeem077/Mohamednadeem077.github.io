@@ -1,10 +1,48 @@
 <!DOCTYPE html>
-<html>
+<html lang="ta">
 <head>
-<title>PodStream</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PodStream Tamil</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
-<body style="background:black;color:white;text-align:center;padding:100px;font-size:20px;">
-  <h1>🎙️ PodStream Tamil</h1>
-  <p>உங்கள் வலைத்தளம் இப்போது Live ஆகிவிட்டது</p>
+<body class="bg-zinc-950 text-white min-h-screen">
+    <nav class="bg-zinc-900 p-4 sticky top-0">
+        <div class="max-w-6xl mx-auto flex justify-between items-center">
+            <h1 class="text-4xl font-bold">🎙️ PodStream</h1>
+            <input id="search" type="text" placeholder="தேடுங்கள்..." class="bg-zinc-800 px-5 py-3 rounded-full w-64">
+        </div>
+    </nav>
+
+    <div class="max-w-6xl mx-auto px-4 py-10">
+        <h1 class="text-5xl font-bold text-center mb-6">தமிழ் பாட்காஸ்ட்கள்</h1>
+        <div id="grid" class="grid grid-cols-1 sm:grid-cols-2 gap-6"></div>
+    </div>
+
+    <script>
+        let episodes = [];
+        for(let i=1; i<=30; i++){
+            episodes.push({title: `எபிசோட் ${i} - தமிழ் பாட்காஸ்ட்`, host: "Firdonadee"});
+        }
+        function render(){
+            const container = document.getElementById('grid');
+            container.innerHTML = '';
+            episodes.forEach((ep,i) => {
+                container.innerHTML += `
+                    <div onclick="alert('🎙️ ${ep.title} தொடங்குகிறது!')" 
+                         class="bg-zinc-900 p-6 rounded-3xl cursor-pointer hover:bg-zinc-800">
+                        <h3 class="font-bold text-lg">${ep.title}</h3>
+                        <p class="text-emerald-400">${ep.host}</p>
+                    </div>
+                `;
+            });
+        }
+        document.getElementById('search').addEventListener('input', (e) => {
+            // search functionality
+            render();
+        });
+        window.onload = render;
+    </script>
 </body>
 </html>
