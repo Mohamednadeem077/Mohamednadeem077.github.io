@@ -3,127 +3,187 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TamilHot 18+ • 1200+ Videos</title>
+    <title>TamilHot 18+ • 1200+ Videos + Live</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
     <style>
         body { font-family: system-ui, sans-serif; }
         .card { transition: all 0.3s ease; }
-        .card:hover { transform: scale(1.03); box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.3); }
-        .modal { animation: fadeIn 0.2s ease; }
+        .card:hover { transform: translateY(-5px); }
     </style>
 </head>
 <body class="bg-zinc-950 text-white">
 
     <!-- Navbar -->
-    <nav class="bg-black border-b border-red-900 sticky top-0 z-50">
-        <div class="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
+    <nav class="bg-black border-b border-red-800 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
             <div class="flex items-center gap-3">
                 <span class="text-4xl">🔥</span>
                 <span class="text-3xl font-bold text-red-500">TamilHot</span>
-                <span class="text-sm bg-red-600 px-2 py-0.5 rounded">18+</span>
+                <span class="bg-red-600 text-xs px-2 py-1 rounded font-bold">18+</span>
             </div>
-            <div class="flex items-center gap-4">
+            
+            <div class="flex items-center gap-3">
                 <input id="search" type="text" placeholder="தேடுங்கள்... Tamil Sex Videos" 
-                       class="bg-zinc-900 border border-zinc-700 px-5 py-2 rounded-full w-80 focus:outline-none focus:border-red-500">
+                       class="bg-zinc-900 border border-zinc-700 px-5 py-2 rounded-full w-72 focus:outline-none">
+                
+                <!-- LIVE Button -->
+                <button onclick="openLiveModal()" 
+                        class="bg-red-600 hover:bg-red-700 px-6 py-2 rounded-full font-bold flex items-center gap-2">
+                    <i class="fas fa-broadcast-tower"></i> 
+                    <span>LIVE</span>
+                </button>
             </div>
         </div>
     </nav>
 
     <div class="max-w-7xl mx-auto px-4 py-8">
         <h1 class="text-5xl font-bold text-center mb-2">தமிழ் All Collections Sex Videos</h1>
-        <p class="text-center text-red-400 text-xl mb-8">1200+ Full Nude & Real Sex Videos</p>
+        <p class="text-center text-red-400 text-xl mb-8">1200+ Videos + Live Stream</p>
 
-        <!-- Grid -->
         <div id="grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4"></div>
     </div>
 
-    <!-- Modal -->
-    <div id="modal" class="hidden fixed inset-0 bg-black/90 flex items-center justify-center z-[100]">
-        <div class="bg-zinc-900 rounded-2xl max-w-2xl w-full mx-4 overflow-hidden">
+    <!-- Video Modal (for normal videos) -->
+    <div id="videoModal" onclick="if (event.target.id === 'videoModal') closeVideoModal()" class="hidden fixed inset-0 bg-black/95 z-[100] flex items-center justify-center p-4">
+        <div onclick="event.stopImmediatePropagation()" class="bg-zinc-900 rounded-3xl max-w-4xl w-full overflow-hidden">
+            <div class="p-6">
+                <div class="flex justify-between mb-4">
+                    <h3 id="modalTitle" class="text-2xl font-bold"></h3>
+                    <button onclick="closeVideoModal()" class="text-4xl">&times;</button>
+                </div>
+                <video id="videoPlayer" class="w-full aspect-video rounded-2xl bg-black" controls></video>
+                <div class="flex gap-4 mt-4">
+                    <button onclick="downloadCurrentVideo()" class="flex-1 bg-red-600 py-3 rounded-2xl font-bold">DOWNLOAD MP4</button>
+                    <button onclick="closeVideoModal()" class="flex-1 bg-zinc-700 py-3 rounded-2xl font-bold">CLOSE</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- LIVE Modal -->
+    <div id="liveModal" onclick="if (event.target.id === 'liveModal') closeLiveModal()" class="hidden fixed inset-0 bg-black/95 z-[100] flex items-center justify-center p-4">
+        <div onclick="event.stopImmediatePropagation()" class="bg-zinc-900 rounded-3xl max-w-5xl w-full overflow-hidden">
             <div class="p-6">
                 <div class="flex justify-between items-center mb-4">
-                    <h3 id="modalTitle" class="text-2xl font-bold"></h3>
-                    <button onclick="closeModal()" class="text-3xl hover:text-red-500">&times;</button>
+                    <div>
+                        <h3 class="text-2xl font-bold text-red-500">🔴 LIVE NOW</h3>
+                        <p class="text-sm text-zinc-400">API Token உடன் Live Stream</p>
+                    </div>
+                    <button onclick="closeLiveModal()" class="text-4xl">&times;</button>
                 </div>
                 
-                <div class="bg-black aspect-video flex items-center justify-center mb-4 rounded-xl">
-                    <div class="text-center">
-                        <i class="fas fa-play text-6xl text-red-500 mb-3"></i>
-                        <p class="text-lg">Video Placeholder</p>
-                        <p class="text-sm text-zinc-400 mt-1">Real video link add செய்யுங்கள் (external hosting)</p>
-                    </div>
+                <div class="bg-black rounded-2xl overflow-hidden mb-4">
+                    <video id="livePlayer" class="w-full aspect-video" controls playsinline></video>
                 </div>
 
-                <div class="flex gap-3">
-                    <button onclick="alert('Download link add செய்யுங்கள்')" 
-                            class="flex-1 bg-red-600 hover:bg-red-700 py-3 rounded-xl font-semibold">
-                        <i class="fas fa-download mr-2"></i> Download
-                    </button>
-                    <button onclick="closeModal()" 
-                            class="flex-1 bg-zinc-700 hover:bg-zinc-600 py-3 rounded-xl font-semibold">
-                        Close
-                    </button>
+                <div class="bg-zinc-800 p-4 rounded-2xl text-sm">
+                    <p><strong>API Token Example:</strong></p>
+                    <code class="text-red-400">https://your-live-server.com/stream.m3u8?token=YOUR_API_TOKEN</code>
+                    <p class="mt-2 text-xs">உங்கள் live service-இல் token generate செய்து மேலே உள்ள URL-ஐ மாற்றுங்கள்.</p>
                 </div>
             </div>
         </div>
     </div>
 
     <script>
-        // 1200+ Videos Data
+        // 1200+ Videos (same as before)
         const videos = [];
-        const categories = ["Couple", "Solo", "Lesbian", "Hardcore", "Real Couple"];
-        
+        const sampleVideo = "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny_320x180.mp4";
+
         for (let i = 1; i <= 1200; i++) {
-            const cat = categories[i % categories.length];
+            const cat = ["Couple", "Solo", "Lesbian", "Hardcore", "Real Tamil"][i % 5];
             videos.push({
                 id: i,
                 title: `தமிழ் ${cat} Full Nude Sex Video ${i}`,
-                duration: `\( {Math.floor(Math.random() * 8) + 5}: \){String(Math.floor(Math.random() * 60)).padStart(2, '0')}`,
-                views: (Math.floor(Math.random() * 850) + 120) + "K",
-                thumb: `https://picsum.photos/id/${(i % 200) + 20}/300/200`,
+                duration: `\( {Math.floor(Math.random()*9)+4}: \){String(Math.floor(Math.random()*60)).padStart(2,'0')}`,
+                views: `${Math.floor(Math.random()*900)+80}K`,
+                thumb: `https://picsum.photos/id/${(i % 200) + 30}/300/200`,
+                videoUrl: sampleVideo,
                 category: cat
             });
         }
 
-        function render(filteredVideos) {
+        function render(filtered = videos) {
             const grid = document.getElementById('grid');
             grid.innerHTML = '';
-            
-            filteredVideos.forEach(video => {
+            filtered.forEach(video => {
                 const card = document.createElement('div');
-                card.className = `card bg-zinc-900 rounded-2xl overflow-hidden cursor-pointer border border-zinc-800`;
+                card.className = `card bg-zinc-900 rounded-3xl overflow-hidden cursor-pointer border border-zinc-800`;
                 card.innerHTML = `
                     <div class="relative">
                         <img src="${video.thumb}" class="w-full aspect-video object-cover">
-                        <div class="absolute bottom-2 right-2 bg-black/80 text-xs px-2 py-0.5 rounded">
-                            ${video.duration}
-                        </div>
-                        <div class="absolute top-2 left-2 bg-red-600 text-xs px-2 py-0.5 rounded font-bold">
-                            ${video.category}
-                        </div>
+                        <div class="absolute bottom-2 right-2 bg-black/80 text-xs px-2 py-0.5 rounded">${video.duration}</div>
+                        <div class="absolute top-2 left-2 bg-red-600 text-xs px-2 py-0.5 rounded font-bold">${video.category}</div>
                     </div>
-                    <div class="p-3">
+                    <div class="p-3.5">
                         <h3 class="font-semibold text-sm line-clamp-2 mb-1">${video.title}</h3>
-                        <div class="flex justify-between text-xs text-zinc-400">
-                            <span><i class="fas fa-eye mr-1"></i>${video.views}</span>
-                        </div>
+                        <div class="text-xs text-zinc-400"><i class="fas fa-eye mr-1"></i>${video.views}</div>
                     </div>
                 `;
-                
-                card.onclick = () => showModal(video);
+                card.onclick = () => playVideo(video);
                 grid.appendChild(card);
             });
         }
 
-        function showModal(video) {
+        let currentVideo = null;
+        function playVideo(video) {
+            currentVideo = video;
             document.getElementById('modalTitle').innerText = video.title;
-            document.getElementById('modal').classList.remove('hidden');
-            document.getElementById('modal').classList.add('flex');
+            const player = document.getElementById('videoPlayer');
+            player.src = video.videoUrl;
+            document.getElementById('videoModal').classList.remove('hidden');
+            document.getElementById('videoModal').classList.add('flex');
         }
 
-        function closeModal() {
-            const modal = document.getElementById('modal');
+        function closeVideoModal() {
+            const modal = document.getElementById('videoModal');
+            const player = document.getElementById('videoPlayer');
+            player.pause();
+            player.src = '';
+            modal.classList.remove('flex');
+            modal.classList.add('hidden');
+        }
+
+        function downloadCurrentVideo() {
+            if (!currentVideo) return;
+            const a = document.createElement('a');
+            a.href = currentVideo.videoUrl;
+            a.download = currentVideo.title.replace(/ /g, '_') + '.mp4';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        }
+
+        // LIVE MODAL
+        function openLiveModal() {
+            const modal = document.getElementById('liveModal');
+            const player = document.getElementById('livePlayer');
+            
+            // Demo live URL (replace with your real HLS + token)
+            const liveHlsUrl = "https://bitdash-a.akamaihd.net/content/sintel/hls/playlist.m3u8"; 
+            // Real use: "https://your-server.com/live/stream.m3u8?token=YOUR_API_TOKEN_HERE"
+
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+
+            if (Hls.isSupported()) {
+                const hls = new Hls();
+                hls.loadSource(liveHlsUrl);
+                hls.attachMedia(player);
+            } else if (player.canPlayType('application/vnd.apple.mpegurl')) {
+                player.src = liveHlsUrl;
+            } else {
+                player.src = liveHlsUrl; // fallback
+            }
+        }
+
+        function closeLiveModal() {
+            const modal = document.getElementById('liveModal');
+            const player = document.getElementById('livePlayer');
+            player.pause();
+            player.src = '';
             modal.classList.remove('flex');
             modal.classList.add('hidden');
         }
@@ -135,9 +195,8 @@
             render(filtered);
         });
 
-        // Initial render
         window.onload = () => {
-            render(videos);
+            render();
         };
     </script>
 </body>
